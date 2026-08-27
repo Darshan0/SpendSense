@@ -290,19 +290,16 @@ private fun HomeScreen(
             HomeHeader()
         }
         item {
-            RecentFocusPanel(analytics = analytics, goal = goals.firstOrNull())
+            HomeNarrativePanel(analytics = analytics, goal = goals.firstOrNull())
         }
         item {
-            RecentCategoryPressurePanel(analytics)
+            TodayDecisionPanel(analytics = analytics)
+        }
+        item {
+            SpendingDriversPanel(analytics = analytics)
         }
         item {
             GoalImpactPanel(analytics = analytics, goal = goals.firstOrNull())
-        }
-        item {
-            DailyTrendPanel(analytics)
-        }
-        item {
-            MonthlyContextPanel(analytics)
         }
         item {
             Row(
@@ -1557,7 +1554,7 @@ private fun HomeHeader() {
             color = NamiOnSurfaceVariant.copy(alpha = 0.72f),
         )
         Text(
-            text = "Here is what changed recently.",
+            text = "Your spending story",
             style = MaterialTheme.typography.headlineSmall,
             color = NamiOnSurface,
             fontWeight = FontWeight.SemiBold,
@@ -1566,28 +1563,52 @@ private fun HomeHeader() {
 }
 
 @Composable
-private fun RecentFocusPanel(analytics: AnalyticsSummary?, goal: SpendingGoal?) {
+private fun HomeNarrativePanel(analytics: AnalyticsSummary?, goal: SpendingGoal?) {
     val recent = analytics?.recentSpend
     val topCategory = recent?.topRecentCategories?.firstOrNull()
+    val risingCategory = recent?.categoryTrends?.firstOrNull {
+        it.direction == TrendDirection.UP && it.current7DaysMinor > 0L && it.category.isFlexibleSpend()
+    }
+    val monthlyTop = analytics?.topCategories?.firstOrNull()
+    val driverCategory = risingCategory?.category ?: topCategory?.category
+    val driverName = driverCategory?.advisorDisplayName()
     val goalRemaining = goal?.let { (it.targetAmountMinor - it.currentAmountMinor).coerceAtLeast(0L) }
-    val goalImpact = if (goal != null && goalRemaining != null && recent != null && recent.last7DaysSpendMinor > 0L) {
+    val goalText = if (goal != null && goalRemaining != null && recent != null && recent.last7DaysSpendMinor > 0L) {
         val share = ((recent.last7DaysSpendMinor * 100L) / goalRemaining.coerceAtLeast(1L)).coerceAtMost(999L)
-        "That equals $share% of the remaining ${goal.name} gap."
+        "It equals $share% of the remaining ${goal.name} gap."
     } else {
-        "Add a goal to see how recent spend changes your runway."
+        "Add a goal to convert this into runway."
     }
     val title = when {
         recent == null || recent.last7DaysSpendMinor == 0L -> "No recent spend yet"
-        topCategory != null -> "${topCategory.category.displayName()} drove the last 7 days"
+        driverCategory == TransactionCategory.OTHER -> "Uncategorized spend needs review"
+        risingCategory != null -> "$driverName is the behavior to watch"
+        topCategory != null -> "$driverName is driving recent spend"
         else -> "Recent spend is ready"
     }
-    val body = if (recent == null || recent.last7DaysSpendMinor == 0L) {
-        "When new transactions arrive, SpendSense will compare today, yesterday, and the last 7 days instead of over-weighting monthly bills."
-    } else {
-        val categoryText = topCategory?.let {
-            "${it.category.displayName()} is ${MoneyFormatter.formatMinor(it.amountMinor, "INR")} of the last 7 days. "
-        }.orEmpty()
-        "${categoryText}You spent ${MoneyFormatter.formatMinor(recent.last7DaysSpendMinor, "INR")} recently, averaging ${MoneyFormatter.formatMinor(recent.dailyAverageMinor, "INR")} per day. $goalImpact"
+    val body = when {
+        recent == null || recent.last7DaysSpendMinor == 0L -> {
+            "When transactions arrive, this will focus on today, yesterday, and the last 7 days instead of making rent look like the only story."
+        }
+        driverCategory == TransactionCategory.OTHER -> {
+            "SpendSense sees ${MoneyFormatter.formatMinor(topCategory?.amountMinor ?: risingCategory?.current7DaysMinor ?: 0L, "INR")} as uncategorized recent spend. Before cutting it, review the merchants so the advisor knows whether this is food, fuel, shopping, or a real one-off. $goalText"
+        }
+        risingCategory != null -> {
+            "$driverName rose by ${MoneyFormatter.formatMinor(risingCategory.deltaMinor, "INR")} versus the previous week. Recent spend is ${MoneyFormatter.formatMinor(recent.last7DaysSpendMinor, "INR")}; $goalText"
+        }
+        topCategory != null -> {
+            "$driverName took ${MoneyFormatter.formatMinor(topCategory.amountMinor, "INR")} in the last 7 days. That matters more than a once-a-month ${monthlyTop?.category?.displayName()?.lowercase() ?: "bill"} for today’s decision. $goalText"
+        }
+        else -> {
+            "Recent spend is ${MoneyFormatter.formatMinor(recent.last7DaysSpendMinor, "INR")}. Watch the next few transactions to find the driver."
+        }
+    }
+    val action = when {
+        recent == null || recent.last7DaysSpendMinor == 0L -> "Next: enable transaction capture or add a sample spend."
+        driverCategory == TransactionCategory.OTHER -> "Next: open recent transactions and correct unknown merchants before deciding what to cut."
+        risingCategory != null -> "Next: cap ${driverName?.lowercase()} today and move the avoided amount toward the goal."
+        topCategory != null -> "Next: review the last few ${driverName?.lowercase()} transactions before spending again."
+        else -> "Next: keep capturing transactions so the pattern becomes clear."
     }
 
     Surface(
@@ -1611,18 +1632,181 @@ private fun RecentFocusPanel(analytics: AnalyticsSummary?, goal: SpendingGoal?) 
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                CategoryIcon(topCategory?.category ?: TransactionCategory.OTHER, size = 42.dp)
+                CategoryIcon(risingCategory?.category ?: topCategory?.category ?: TransactionCategory.OTHER, size = 42.dp)
                 Column(modifier = Modifier.weight(1f)) {
                     Text(title, color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
-                    Text("Recent window, not just monthly bills", color = NamiPrimary, style = MaterialTheme.typography.labelSmall)
+                    Text("Decision-first view", color = NamiPrimary, style = MaterialTheme.typography.labelSmall)
                 }
             }
             Text(body, color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                FocusMetric("Today", MoneyFormatter.formatMinor(recent?.todaySpendMinor ?: 0L, "INR"), Modifier.weight(1f))
-                FocusMetric("Yesterday", MoneyFormatter.formatMinor(recent?.yesterdaySpendMinor ?: 0L, "INR"), Modifier.weight(1f))
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = NamiSurfaceHigh.copy(alpha = 0.68f),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.06f)),
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Filled.AutoAwesome, contentDescription = null, tint = NamiPrimary, modifier = Modifier.size(18.dp))
+                    Text(action, color = NamiOnSurface, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                }
             }
         }
+    }
+}
+
+private fun TransactionCategory.advisorDisplayName(): String {
+    return if (this == TransactionCategory.OTHER) "Uncategorized spend" else displayName()
+}
+
+@Composable
+private fun TodayDecisionPanel(analytics: AnalyticsSummary?) {
+    val recent = analytics?.recentSpend
+    val dailyBudget = recent?.suggestedDailyBudgetMinor ?: 0L
+    val todaySpend = recent?.todaySpendMinor ?: 0L
+    val yesterdaySpend = recent?.yesterdaySpendMinor ?: 0L
+    val isOverBudget = dailyBudget > 0L && todaySpend > dailyBudget
+    val progress = if (dailyBudget <= 0L) 0f else (todaySpend.toFloat() / dailyBudget.toFloat()).coerceIn(0f, 1f)
+    MilledCard {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text("Today’s decision", color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = if (isOverBudget) "Pause flexible spending for the day" else "You still have room if the next spend is intentional",
+                        color = if (isOverBudget) Color(0xFFFF7A7A) else Color(0xFF64D6A3),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                Icon(
+                    imageVector = if (isOverBudget) Icons.Filled.ArrowUpward else Icons.Filled.CheckCircle,
+                    contentDescription = null,
+                    tint = if (isOverBudget) Color(0xFFFF7A7A) else Color(0xFF64D6A3),
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                FocusMetric("Today", formatCompactMinor(todaySpend), Modifier.weight(1f))
+                FocusMetric("Yesterday", formatCompactMinor(yesterdaySpend), Modifier.weight(1f))
+                FocusMetric("Guardrail", if (dailyBudget > 0L) formatCompactMinor(dailyBudget) else "Learning", Modifier.weight(1f))
+            }
+            if (dailyBudget > 0L) {
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth().clip(CircleShape),
+                    color = if (isOverBudget) Color(0xFFFF7A7A) else Color(0xFF64D6A3),
+                    trackColor = NamiSurfaceHighest,
+                )
+            }
+        }
+    }
+}
+
+private fun formatCompactMinor(amountMinor: Long): String {
+    val rupees = amountMinor / 100L
+    return if (rupees >= 100_000L) {
+        "₹${rupees / 100_000L}.${((rupees % 100_000L) / 10_000L)}L"
+    } else {
+        "₹%,d".format(rupees)
+    }
+}
+
+@Composable
+private fun SpendingDriversPanel(analytics: AnalyticsSummary?) {
+    val recent = analytics?.recentSpend
+    val categories = recent?.topRecentCategories.orEmpty()
+    val trend = recent?.dailyTrend.orEmpty()
+    val max = trend.maxOfOrNull { it.amountMinor }?.coerceAtLeast(1L) ?: 1L
+
+    MilledCard {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                CategoryIcon(categories.firstOrNull()?.category ?: TransactionCategory.OTHER, size = 40.dp)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Why it happened", color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                    Text("Category drivers first, daily rhythm second", color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            if (categories.isEmpty()) {
+                Text("No 7-day category signal yet. Monthly bills stay out of the main story until they affect a daily decision.", color = NamiOnSurfaceVariant)
+            } else {
+                categories.take(3).forEach { category ->
+                    CategoryPressureRow(
+                        category = category,
+                        totalMinor = recent?.last7DaysSpendMinor ?: 0L,
+                    )
+                }
+            }
+            HorizontalDivider(color = Color.White.copy(alpha = 0.06f))
+            HomeDailyRhythm(
+                trend = trend,
+                max = max,
+                yesterdaySpendMinor = recent?.yesterdaySpendMinor ?: 0L,
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeDailyRhythm(
+    trend: List<com.spendsense.features.finance.domain.DailySpend>,
+    max: Long,
+    yesterdaySpendMinor: Long,
+) {
+    val bars = if (trend.isEmpty()) {
+        List(7) { index -> com.spendsense.features.finance.domain.DailySpend(listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[index], 0L) }
+    } else {
+        trend
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text("Daily rhythm", color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = if (yesterdaySpendMinor > 0L) MoneyFormatter.formatMinor(yesterdaySpendMinor, "INR") else "No spend",
+                color = NamiOutline,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 92.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            bars.forEachIndexed { index, day ->
+                val height = (18 + ((day.amountMinor * 74L) / max).toInt()).dp
+                val isToday = index == bars.lastIndex
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = height)
+                            .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
+                            .background(if (isToday) NamiPrimaryContainer else NamiTertiary.copy(alpha = 0.28f)),
+                    )
+                    Text(day.label.take(3), color = if (isToday) NamiPrimary else NamiOutline, style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
+        Text(
+            text = if (yesterdaySpendMinor > 0L) {
+                "Use this to spot repeated spikes. One rent payment should not control the daily story."
+            } else {
+                "No spend yesterday, so today starts without pressure from a recent spike."
+            },
+            color = NamiOnSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall,
+        )
     }
 }
 
