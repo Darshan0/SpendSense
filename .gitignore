@@ -1,0 +1,10 @@
+.gradle/
+.idea/
+build/
+local.properties
+captures/
+*.iml
+app/build/
+.DS_Store
+app/src/main/assets/models/*.part*
+app/src/main/assets/models/*.litertlm

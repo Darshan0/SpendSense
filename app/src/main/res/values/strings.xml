@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SpendSense</string>
+    <string name="notification_listener_name">SpendSense Transaction Detection</string>
+</resources>

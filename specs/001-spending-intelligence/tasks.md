@@ -1,0 +1,24 @@
+# Spending Intelligence Tasks
+
+- [x] Add analytics summary domain model.
+- [x] Add goal domain model.
+- [x] Add Room-backed goal persistence.
+- [x] Add deterministic analytics use case.
+- [x] Add deterministic insight generation.
+- [x] Add `LocalLanguageModel` interface.
+- [x] Add `NoOpLanguageModel` fallback.
+- [x] Connect Gemini Nano through ML Kit GenAI Prompt API.
+- [x] Add bundled LiteRT-LM provider scaffold.
+- [x] Add local model router: Gemini Nano -> bundled LiteRT-LM -> deterministic fallback.
+- [x] Add packaged model asset slot.
+- [x] Add local model availability status.
+- [x] Add assistant Ask action that invokes the local model when available.
+- [x] Add Insights screen.
+- [x] Add Goals screen.
+- [x] Add AI assistant screen with local deterministic answer.
+- [ ] Add editable goal creation.
+- [ ] Add user question input.
+- [ ] Add transaction period filters.
+- [x] Add local LLM provider implementation.
+- [ ] Add real `spendsense.litertlm` model asset.
+- [ ] Add analytics and assistant tests.

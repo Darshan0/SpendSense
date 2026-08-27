@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nami - AI Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Geist:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Hanken+Grotesk:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(28, 28, 30, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .ai-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(94, 92, 230, 0.1), transparent 40%);
+            animation: rotate 6s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .mesh-gradient-border {
+            position: relative;
+            padding: 1px;
+            background: linear-gradient(135deg, #5e5ce6 0%, #aac7ff 50%, #006dd6 100%);
+            border-radius: 1.05rem;
+        }
+        .mesh-gradient-border > div {
+            border-radius: 1rem;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "primary-container": "#5e5ce6",
+                "on-primary-fixed-variant": "#332dbc",
+                "on-secondary": "#303032",
+                "on-tertiary": "#003064",
+                "on-secondary-fixed": "#1b1b1d",
+                "error-container": "#93000a",
+                "primary-fixed": "#e2dfff",
+                "surface-container-lowest": "#0e0e10",
+                "secondary-fixed": "#e4e2e4",
+                "background": "#131315",
+                "tertiary-container": "#006dd6",
+                "on-secondary-fixed-variant": "#474649",
+                "on-secondary-container": "#b6b4b7",
+                "on-background": "#e4e2e4",
+                "on-error-container": "#ffdad6",
+                "error": "#ffb4ab",
+                "inverse-primary": "#4d4ad5",
+                "surface-variant": "#353437",
+                "on-tertiary-fixed": "#001b3e",
+                "surface-container-high": "#2a2a2c",
+                "secondary-fixed-dim": "#c8c6c8",
+                "surface-container-low": "#1b1b1d",
+                "surface-dim": "#131315",
+                "on-primary-fixed": "#0c006b",
+                "on-surface": "#e4e2e4",
+                "tertiary-fixed": "#d6e3ff",
+                "primary-fixed-dim": "#c2c1ff",
+                "inverse-on-surface": "#303032",
+                "surface-tint": "#c2c1ff",
+                "tertiary-fixed-dim": "#aac7ff",
+                "on-primary-container": "#f4f1ff",
+                "surface": "#131315",
+                "outline": "#918fa0",
+                "tertiary": "#aac7ff",
+                "on-error": "#690005",
+                "on-surface-variant": "#c7c4d7",
+                "on-tertiary-container": "#f0f3ff",
+                "on-tertiary-fixed-variant": "#00468d",
+                "secondary-container": "#474649",
+                "surface-container": "#1f1f21",
+                "on-primary": "#1800a7",
+                "secondary": "#c8c6c8",
+                "inverse-surface": "#e4e2e4",
+                "outline-variant": "#464554",
+                "surface-bright": "#39393b",
+                "primary": "#c2c1ff",
+                "surface-container-highest": "#353437"
+              },
+              "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "stack-gap-md": "16px",
+                "stack-gap-sm": "8px",
+                "grid-gutter": "12px",
+                "container-padding": "20px",
+                "stack-gap-lg": "24px"
+              },
+              "fontFamily": {
+                "headline-lg-mobile": ["Hanken Grotesk"],
+                "display-lg": ["Hanken Grotesk"],
+                "title-md": ["Hanken Grotesk"],
+                "body-lg": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-lg": ["Hanken Grotesk"],
+                "label-sm": ["Geist"]
+              },
+              "fontSize": {
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-container-padding py-stack-gap-sm">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">menu</button>
+<h1 class="font-display-lg text-title-md text-on-background tracking-tight">Nami</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">notifications</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-md mx-auto px-container-padding py-stack-gap-lg pb-32">
+<!-- Header Section -->
+<section class="mb-stack-gap-lg">
+<div class="flex items-center justify-between mb-stack-gap-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile">Insights</h2>
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full font-label-sm text-label-sm border border-primary/20">AI ACTIVE</span>
+</div>
+<p class="text-on-surface-variant font-body-md">Personalized financial guidance for your wealth journey.</p>
+</section>
+<!-- Insights Feed -->
+<div class="flex flex-col gap-stack-gap-md">
+<!-- Insight 1: Spending Spike -->
+<div class="glass-card p-5 rounded-DEFAULT flex flex-col gap-4 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-16 translate-x-16 blur-3xl transition-all duration-700 group-hover:bg-primary/10"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">trending_up</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Spending Alert</p>
+<h3 class="font-title-md text-title-md mt-0.5">Your Zomato spending increased 24%.</h3>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-on-surface-variant text-sm">
+<span>This Month</span>
+<span class="text-on-surface">₹8,450</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-error" style="width: 74%"></div>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-surface-container-highest py-2.5 rounded-DEFAULT font-label-sm text-label-sm hover:bg-surface-variant transition-colors active:scale-95 duration-200">View Details</button>
+<button class="flex-1 bg-primary-container text-on-primary-container py-2.5 rounded-DEFAULT font-label-sm text-label-sm hover:opacity-90 transition-opacity active:scale-95 duration-200">Set Limit</button>
+</div>
+</div>
+<!-- Insight 2: Subscription Renewed -->
+<div class="glass-card p-5 rounded-DEFAULT flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">autorenew</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Subscription</p>
+<h3 class="font-title-md text-title-md mt-0.5">Netflix subscription renewed.</h3>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-DEFAULT flex items-center justify-between border border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-on-secondary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">movie</span>
+</div>
+<span class="font-body-md">Premium Monthly Plan</span>
+</div>
+<span class="font-title-md text-on-surface">₹649</span>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="w-full bg-surface-container-highest py-2.5 rounded-DEFAULT font-label-sm text-label-sm hover:bg-surface-variant transition-colors active:scale-95 duration-200">Manage Subscriptions</button>
+</div>
+</div>
+<!-- Insight 3: Savings Recommendation (Featured/AI Insight) -->
+<div class="mesh-gradient-border group">
+<div class="bg-background p-5 flex flex-col gap-4 ai-shimmer">
+<div class="flex items-start justify-between relative z-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/20">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Nami Suggests</p>
+<h3 class="font-title-md text-title-md mt-0.5">You can save ₹4,200 by reducing food delivery.</h3>
+</div>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed relative z-10">
+                        Analyzing your past 3 months, you've ordered 12 times per month. Reducing this to 4 times could boost your SIP contributions by 15%.
+                    </p>
+<div class="flex gap-2 pt-2 relative z-10">
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-DEFAULT font-label-sm text-label-sm font-bold shadow-lg shadow-primary-container/30 hover:opacity-90 transition-all active:scale-[0.98] duration-200">Start Savings Challenge</button>
+</div>
+</div>
+</div>
+<!-- Insight 4: Weekend Spend -->
+<div class="glass-card p-5 rounded-DEFAULT flex flex-col gap-4 relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-on-secondary-fixed-variant/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">weekend</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Lifestyle Analysis</p>
+<h3 class="font-title-md text-title-md mt-0.5">Weekend spending is 40% higher than average.</h3>
+</div>
+</div>
+</div>
+<!-- Simple Chart Representation -->
+<div class="flex items-end justify-between h-20 px-4 pt-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-surface-container-highest rounded-t-sm h-10"></div>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Mon</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-surface-container-highest rounded-t-sm h-8"></div>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Tue</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-surface-container-highest rounded-t-sm h-9"></div>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Wed</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-surface-container-highest rounded-t-sm h-11"></div>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Thu</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-primary-container rounded-t-sm h-16"></div>
+<span class="font-label-sm text-[10px] text-primary">Fri</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-primary-container rounded-t-sm h-20"></div>
+<span class="font-label-sm text-[10px] text-primary font-bold">Sat</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 bg-primary-container rounded-t-sm h-14"></div>
+<span class="font-label-sm text-[10px] text-primary">Sun</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="w-full border border-outline-variant py-2.5 rounded-DEFAULT font-label-sm text-label-sm text-on-surface hover:bg-white/5 transition-colors active:scale-95 duration-200">Breakdown by Category</button>
+</div>
+</div>
+<!-- Visualization Element -->
+<div class="w-full h-48 rounded-DEFAULT overflow-hidden relative glass-card mt-2">
+<div class="absolute inset-0 opacity-40">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sophisticated, minimalist abstract financial data visualization with clean, flowing white lines and deep indigo glowing gradients on a pure black background. The aesthetic is futuristic, calm, and high-end, representing secure AI data processing for a premium financial app like CRED or Notion." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCN51k7_Xt4IVukn0r1Dwgrrp6TWBLvNv1-R5agPobfDAOE3RSOIqDbnYyjHyDh6XmCL2eUxKlqI34FPz8_JOWlJ0I9mzweObA1hP1dApYavH07YANdwfmbfBxZBLDhNKiBiKxQGhfdf76FNoRv7WZrp54YSJlfpltg7M8f8Ub7BGQZ56WGTgkuUzB81QxoSrWDh10jfaCZmfe5qTgCuHViYtPN4qnT5_JAJml9cQ93uU3RmrSo5q6SIb9MyZ8CJ-cF21mdICIt9Cs')"></div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 z-10">
+<h4 class="font-title-md text-on-surface">Weekly Flow</h4>
+<p class="font-label-sm text-on-surface-variant">Optimizing your liquidity</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-lg bg-surface-container/90 dark:bg-surface-container/90 backdrop-blur-xl border-t border-white/5 shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] flex justify-around items-center h-20 pb-safe px-container-padding">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300" href="#">
+<div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-primary-container/40">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<span class="font-label-sm text-label-sm mt-1">AI</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container font-bold after:content-[''] after:w-1 after:h-1 after:bg-primary-container after:rounded-full after:mt-1 tap-highlight-transparent active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for cards
+        document.querySelectorAll('.glass-card, .mesh-gradient-border').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll appearance
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card, .mesh-gradient-border').forEach(el => {
+            el.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-700', 'ease-out');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

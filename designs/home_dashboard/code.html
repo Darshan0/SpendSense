@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#5e5ce6",
+                      "on-primary-fixed-variant": "#332dbc",
+                      "on-secondary": "#303032",
+                      "on-tertiary": "#003064",
+                      "on-secondary-fixed": "#1b1b1d",
+                      "error-container": "#93000a",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-lowest": "#0e0e10",
+                      "secondary-fixed": "#e4e2e4",
+                      "background": "#131315",
+                      "tertiary-container": "#006dd6",
+                      "on-secondary-fixed-variant": "#474649",
+                      "on-secondary-container": "#b6b4b7",
+                      "on-background": "#e4e2e4",
+                      "on-error-container": "#ffdad6",
+                      "error": "#ffb4ab",
+                      "inverse-primary": "#4d4ad5",
+                      "surface-variant": "#353437",
+                      "on-tertiary-fixed": "#001b3e",
+                      "surface-container-high": "#2a2a2c",
+                      "secondary-fixed-dim": "#c8c6c8",
+                      "surface-container-low": "#1b1b1d",
+                      "surface-dim": "#131315",
+                      "on-primary-fixed": "#0c006b",
+                      "on-surface": "#e4e2e4",
+                      "tertiary-fixed": "#d6e3ff",
+                      "primary-fixed-dim": "#c2c1ff",
+                      "inverse-on-surface": "#303032",
+                      "surface-tint": "#c2c1ff",
+                      "tertiary-fixed-dim": "#aac7ff",
+                      "on-primary-container": "#f4f1ff",
+                      "surface": "#131315",
+                      "outline": "#918fa0",
+                      "tertiary": "#aac7ff",
+                      "on-error": "#690005",
+                      "on-surface-variant": "#c7c4d7",
+                      "on-tertiary-container": "#f0f3ff",
+                      "on-tertiary-fixed-variant": "#00468d",
+                      "secondary-container": "#474649",
+                      "surface-container": "#1f1f21",
+                      "on-primary": "#1800a7",
+                      "secondary": "#c8c6c8",
+                      "inverse-surface": "#e4e2e4",
+                      "outline-variant": "#464554",
+                      "surface-bright": "#39393b",
+                      "primary": "#c2c1ff",
+                      "surface-container-highest": "#353437"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "1.5rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap-md": "16px",
+                      "stack-gap-sm": "8px",
+                      "grid-gutter": "12px",
+                      "container-padding": "20px",
+                      "stack-gap-lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "display-lg": ["Hanken Grotesk"],
+                      "title-md": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "label-sm": ["Geist"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-xl flex justify-between items-center px-container-padding py-stack-gap-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">menu</span>
+<h1 class="font-display-lg text-title-md text-on-background tracking-tight">Nami</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a young man with a friendly expression, styled in high-end studio lighting with a neutral, soft-focus corporate backdrop. The lighting highlights clean facial features and a subtle smile, reflecting a modern and trustworthy professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlW4Mk50cvt-SmEagRGaD8oR5Y1TLSH8VwUAZ0PrO9FNTkMH4v5Qm9KlMefF11dVDOxQmjsIIfG8eMBMOXlVbZ84WdnaUGG8D3SaDBWIoR-ZTtOcKb3gzk84rrGJorgvzuxcPHvt7gOQo_anKiyKP0FSDlaE2mCkZ1P5aIAho_HDi-tRWZgirc1Mgxbnnd7N0eHbNj0rqX-QxyImWvYXsVSOIBoPQs5WQFzmtQGsSx5BQu9TF2_CUTnA1FPbSbNlWuhe4IywU70vA">
+</div>
+</div>
+</header>
+<main class="px-container-padding pt-6 space-y-stack-gap-lg">
+<!-- Greeting -->
+<section>
+<p class="font-body-md text-on-surface-variant opacity-70">Good Morning, Darshan</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-1">Focus on growth today.</h2>
+</section>
+<!-- AI Insight Card -->
+<div class="relative overflow-hidden p-6 rounded-lg bg-surface-container-high border border-primary-container/20 ai-shimmer">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h3 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-1">AI Insight</h3>
+<p class="font-body-lg text-on-surface-variant leading-snug">
+                        You spent <span class="text-on-surface font-bold">18% less</span> on food this week. You're on track to save an extra $240 this month.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Spending Overview -->
+<section class="milled-card p-6 rounded-lg">
+<div class="flex justify-between items-end mb-6">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Spent this month</p>
+<h3 class="font-display-lg text-headline-lg-mobile text-on-surface">$2,840.50</h3>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Remaining</p>
+<p class="font-body-lg text-primary font-semibold">$1,159.50</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 72%;"></div>
+</div>
+<div class="flex justify-between mt-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">72% of budget</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">8 days left</span>
+</div>
+</section>
+<!-- Spending Trend (Line Chart Visual) -->
+<section class="space-y-4">
+<h4 class="font-title-md text-title-md text-on-surface">Spending Trend</h4>
+<div class="milled-card h-48 rounded-lg p-4 flex flex-col justify-between">
+<div class="flex-1 flex items-end justify-between gap-1 h-32 px-2">
+<!-- Fake Chart Visual using styled divs -->
+<div class="w-full h-1/2 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-2/3 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-1/3 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-3/4 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-1/2 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-2/3 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+<div class="w-full h-4/5 bg-primary/20 rounded-t-sm relative">
+<div class="absolute top-0 w-full h-1 bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant opacity-50 px-2 pt-2 border-t border-outline-variant/10">
+<span class="">Mon</span><span class="">Tue</span><span class="">Wed</span><span class="">Thu</span><span class="">Fri</span><span class="">Sat</span><span class="">Sun</span>
+</div>
+</div>
+</section>
+<!-- Bento Layout: Savings & Categories -->
+<div class="grid grid-cols-2 gap-grid-gutter">
+<!-- Savings Progress -->
+<section class="col-span-2 milled-card p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div>
+<h4 class="font-body-md font-semibold text-on-surface">Iceland Trip</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">$4,200 / $5,000</p>
+</div>
+</div>
+<div class="relative w-12 h-12">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-variant" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-tertiary" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="25.1" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-label-sm text-[10px] text-on-surface">84%</span>
+</div>
+</section>
+<!-- Category: Food -->
+<div class="milled-card p-4 rounded-lg flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h5 class="font-label-sm text-on-surface-variant">Food</h5>
+<p class="font-title-md text-on-surface">$420.00</p>
+</div>
+</div>
+<!-- Category: Travel -->
+<div class="milled-card p-4 rounded-lg flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
+<span class="material-symbols-outlined">flight</span>
+</div>
+<div>
+<h5 class="font-label-sm text-on-surface-variant">Travel</h5>
+<p class="font-title-md text-on-surface">$850.25</p>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-title-md text-title-md text-on-surface">Recent</h4>
+<button class="font-label-sm text-primary">See All</button>
+</div>
+<div class="space-y-stack-gap-sm">
+<!-- Transaction 1 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">shopping_bag</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Apple Store</p>
+<p class="font-label-sm text-on-surface-variant">Electronics • Today</p>
+</div>
+</div>
+<p class="font-body-lg font-semibold text-on-surface">-$129.00</p>
+</div>
+<!-- Transaction 2 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">local_cafe</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Blue Bottle Coffee</p>
+<p class="font-label-sm text-on-surface-variant">Food • Yesterday</p>
+</div>
+</div>
+<p class="font-body-lg font-semibold text-on-surface">-$6.50</p>
+</div>
+<!-- Transaction 3 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">directions_car</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Uber</p>
+<p class="font-label-sm text-on-surface-variant">Transport • 2 days ago</p>
+</div>
+</div>
+<p class="font-body-lg font-semibold text-on-surface">-$24.10</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating AI Input -->
+<div class="fixed bottom-24 right-6 z-40">
+  <button class="w-14 h-14 rounded-full bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/40 active:scale-90 transition-transform duration-200 group relative overflow-hidden">
+    <div class="absolute inset-0 ai-shimmer opacity-50"></div>
+    <span class="material-symbols-outlined text-on-primary-container text-title-md relative z-10" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+  </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-lg bg-surface-container/90 backdrop-blur-xl border-t border-white/5 shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] flex justify-around items-center h-20 pb-safe px-container-padding">
+<!-- Home (Active) -->
+<div class="flex flex-col items-center justify-center text-primary-container font-bold after:content-[''] after:w-1 after:h-1 after:bg-primary-container after:rounded-full after:mt-1 hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<!-- History -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm">History</span>
+</div>
+<!-- AI -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-sm text-label-sm">AI</span>
+</div>
+<!-- Insights -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300">
+<span class="material-symbols-outlined" data-original-icon="query_">query_stats</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</div>
+<!-- Profile -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors tap-highlight-transparent active:scale-90 duration-300">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction: Breathing effect for AI card
+        document.addEventListener('DOMContentLoaded', () => {
+            const aiCard = document.querySelector('.ai-shimmer');
+            if(aiCard) {
+                aiCard.addEventListener('touchstart', () => {
+                    aiCard.style.transform = 'scale(0.98)';
+                    aiCard.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                aiCard.addEventListener('touchend', () => {
+                    aiCard.style.transform = 'scale(1)';
+                });
+            }
+        });
+    </script>
+
+</body></html>

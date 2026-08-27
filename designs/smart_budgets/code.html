@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Nami - AI Budgets</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Geist:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Hanken+Grotesk:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .ai-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(94, 92, 230, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .progress-ring {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        .tap-highlight-transparent {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#5e5ce6",
+                        "on-primary-fixed-variant": "#332dbc",
+                        "on-secondary": "#303032",
+                        "on-tertiary": "#003064",
+                        "on-secondary-fixed": "#1b1b1d",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-lowest": "#0e0e10",
+                        "secondary-fixed": "#e4e2e4",
+                        "background": "#131315",
+                        "tertiary-container": "#006dd6",
+                        "on-secondary-fixed-variant": "#474649",
+                        "on-secondary-container": "#b6b4b7",
+                        "on-background": "#e4e2e4",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "inverse-primary": "#4d4ad5",
+                        "surface-variant": "#353437",
+                        "on-tertiary-fixed": "#001b3e",
+                        "surface-container-high": "#2a2a2c",
+                        "secondary-fixed-dim": "#c8c6c8",
+                        "surface-container-low": "#1b1b1d",
+                        "surface-dim": "#131315",
+                        "on-primary-fixed": "#0c006b",
+                        "on-surface": "#e4e2e4",
+                        "tertiary-fixed": "#d6e3ff",
+                        "primary-fixed-dim": "#c2c1ff",
+                        "inverse-on-surface": "#303032",
+                        "surface-tint": "#c2c1ff",
+                        "tertiary-fixed-dim": "#aac7ff",
+                        "on-primary-container": "#f4f1ff",
+                        "surface": "#131315",
+                        "outline": "#918fa0",
+                        "tertiary": "#aac7ff",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-tertiary-container": "#f0f3ff",
+                        "on-tertiary-fixed-variant": "#00468d",
+                        "secondary-container": "#474649",
+                        "surface-container": "#1f1f21",
+                        "on-primary": "#1800a7",
+                        "secondary": "#c8c6c8",
+                        "inverse-surface": "#e4e2e4",
+                        "outline-variant": "#464554",
+                        "surface-bright": "#39393b",
+                        "primary": "#c2c1ff",
+                        "surface-container-highest": "#353437"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-md": "16px",
+                        "stack-gap-sm": "8px",
+                        "grid-gutter": "12px",
+                        "container-padding": "20px",
+                        "stack-gap-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "title-md": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md selection:bg-primary-container selection:text-white">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky bg-background/80 backdrop-blur-xl z-40 flex justify-between items-center px-container-padding py-stack-gap-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">menu</span>
+<h1 class="font-display-lg text-title-md text-on-background tracking-tight">Nami</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio headshot of a person with a friendly expression, soft cinematic lighting, against a dark minimalist background, high-end corporate aesthetic with deep charcoal and indigo tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm3RcZfA7kXSxviIQuL95sAIshGVjn2qPtB-CZ3mbhL9XEjP55i4uVjvYIb1TRqgdoqG0UlA_5kBy2vMdg0n1bhgv5FVXDjwwm9ngAsGpyc-EsusaPN68KJaAvkpZuQudtMJ0PXPEvtl6kZjSnI3-vvS1Jp3wXYRTXhDU9JOiHqGh5i84YsvT-1IvKE1H1yXGk_3eXjGVLIFVPaW4z4oobVC0dRAIJt5eG20KcP9KYIx9PzCj2UAiuI9UuMUucGlQ0pvuGREcUlSM"/>
+</div>
+</div>
+</header>
+<main class="px-container-padding pb-32 pt-stack-gap-lg">
+<!-- AI Budget Summary Header -->
+<section class="mb-stack-gap-lg">
+<div class="flex flex-col gap-1">
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Monthly Outlook</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Budget Health: Strong</h2>
+</div>
+<p class="text-on-surface-variant mt-2 font-body-md">AI suggests you're on track to save <span class="text-tertiary font-bold">$420</span> more than last month.</p>
+</section>
+<!-- Category Progress Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter mb-stack-gap-lg">
+<!-- Housing Card -->
+<div class="glass-card rounded-lg p-stack-gap-md flex items-center justify-between group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex flex-col gap-1">
+<span class="material-symbols-outlined text-primary mb-2">home_work</span>
+<h3 class="font-title-md text-body-lg font-semibold">Housing</h3>
+<p class="text-on-surface-variant text-label-sm">$1,200 / $1,500</p>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-surface-container-highest" cx="18" cy="18" fill="transparent" r="16" stroke-width="3"></circle>
+<circle class="stroke-primary-container progress-ring" cx="18" cy="18" fill="transparent" r="16" stroke-dasharray="100" stroke-dashoffset="20" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold">80%</span>
+</div>
+</div>
+<!-- Food Card -->
+<div class="glass-card rounded-lg p-stack-gap-md flex items-center justify-between group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex flex-col gap-1">
+<span class="material-symbols-outlined text-tertiary mb-2">restaurant</span>
+<h3 class="font-title-md text-body-lg font-semibold">Food & Drink</h3>
+<p class="text-on-surface-variant text-label-sm">$450 / $600</p>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-surface-container-highest" cx="18" cy="18" fill="transparent" r="16" stroke-width="3"></circle>
+<circle class="stroke-tertiary progress-ring" cx="18" cy="18" fill="transparent" r="16" stroke-dasharray="100" stroke-dashoffset="25" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold">75%</span>
+</div>
+</div>
+<!-- Entertainment Card -->
+<div class="glass-card rounded-lg p-stack-gap-md flex items-center justify-between group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex flex-col gap-1">
+<span class="material-symbols-outlined text-error mb-2">movie</span>
+<h3 class="font-title-md text-body-lg font-semibold">Entertainment</h3>
+<p class="text-on-surface-variant text-label-sm">$280 / $300</p>
+</div>
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-surface-container-highest" cx="18" cy="18" fill="transparent" r="16" stroke-width="3"></circle>
+<circle class="stroke-error progress-ring" cx="18" cy="18" fill="transparent" r="16" stroke-dasharray="100" stroke-dashoffset="7" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold">93%</span>
+</div>
+</div>
+</section>
+<!-- AI Recommendations (Bento Style) -->
+<section class="mb-stack-gap-lg">
+<h3 class="font-title-md text-title-md mb-stack-gap-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                AI Recommendations
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-grid-gutter">
+<div class="glass-card rounded-lg p-stack-gap-md border border-primary-container/20 relative overflow-hidden ai-shimmer">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 bg-primary-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container">trending_down</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Reduce Dining Out</h4>
+<p class="text-on-surface-variant text-body-md mt-1">Nami noticed a 15% increase in weekend restaurant spending. Cutting one meal out could save $120/mo.</p>
+<button class="mt-4 px-4 py-2 bg-primary-container text-on-primary-container rounded-full font-label-sm text-label-sm hover:opacity-90 transition-opacity">Apply Suggestion</button>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-lg p-stack-gap-md border border-tertiary/20">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 bg-tertiary/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">savings</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Optimize Subscriptions</h4>
+<p class="text-on-surface-variant text-body-md mt-1">You have 2 overlapping streaming services. Cancelling 'StreamX' saves $18.99 monthly.</p>
+<button class="mt-4 px-4 py-2 bg-surface-container-highest text-on-surface rounded-full font-label-sm text-label-sm">View Details</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Upcoming Expenses & Savings Opportunities -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-grid-gutter">
+<!-- Upcoming Expenses -->
+<section class="glass-card rounded-lg p-stack-gap-md">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title-md text-title-md">Upcoming Expenses</h3>
+<span class="text-primary text-label-sm font-label-sm cursor-pointer">See All</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">bolt</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Electric Utility</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Due in 3 days</p>
+</div>
+</div>
+<p class="font-bold text-on-surface">$142.50</p>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">wifi</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Fiber Internet</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Due in 8 days</p>
+</div>
+</div>
+<p class="font-bold text-on-surface">$80.00</p>
+</div>
+<div class="flex items-center justify-between py-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">directions_car</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Auto Insurance</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Due in 12 days</p>
+</div>
+</div>
+<p class="font-bold text-on-surface">$210.00</p>
+</div>
+</div>
+</section>
+<!-- Savings Opportunities -->
+<section class="flex flex-col gap-grid-gutter">
+<div class="glass-card rounded-lg p-stack-gap-md bg-gradient-to-br from-surface-container to-on-tertiary-fixed-variant/10">
+<div class="flex items-start justify-between">
+<div>
+<span class="inline-block px-2 py-1 bg-tertiary text-on-tertiary text-[10px] font-bold rounded mb-2">AI FIND</span>
+<h4 class="font-bold text-on-surface">Better Insurance Rate</h4>
+<p class="text-on-surface-variant text-body-md mt-1">Switching to 'SafeDrive' could lower your monthly premium by $35 based on your mileage.</p>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[32px]">lightbulb</span>
+</div>
+</div>
+<div class="glass-card rounded-lg p-stack-gap-md">
+<div class="flex items-start justify-between">
+<div>
+<span class="inline-block px-2 py-1 bg-primary-container text-on-primary text-[10px] font-bold rounded mb-2">SMART CUT</span>
+<h4 class="font-bold text-on-surface">Unused GYM Membership</h4>
+<p class="text-on-surface-variant text-body-md mt-1">You haven't checked in to 'Total Fitness' in 60 days. Potential save: $45/mo.</p>
+</div>
+<span class="material-symbols-outlined text-primary-container text-[32px]">cancel</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating AI Input -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-lg z-50">
+<div class="glass-card rounded-full p-2 flex items-center gap-3 border border-primary-container/30 shadow-xl group">
+<div class="w-10 h-10 bg-primary-container rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 w-full font-body-md" placeholder="Ask Nami to adjust a budget..." type="text"/>
+<button class="w-10 h-10 bg-surface-container-highest rounded-full flex items-center justify-center hover:bg-primary-container hover:text-white transition-all">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-lg bg-surface-container/90 dark:bg-surface-container/90 backdrop-blur-xl border-t border-white/5 shadow-[0px_-10px_30px_rgba(0,0,0,0.5)] flex justify-around items-center h-20 pb-safe px-container-padding">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-300 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container font-bold after:content-[''] after:w-1 after:h-1 after:bg-primary-container after:rounded-full after:mt-1 active:scale-90 duration-300 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-300 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-sm text-label-sm mt-1">AI</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-300 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-sm text-label-sm mt-1">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-300 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for circular progress animation
+        document.querySelectorAll('.progress-ring').forEach(ring => {
+            const offset = ring.getAttribute('stroke-dashoffset');
+            ring.style.strokeDashoffset = 100;
+            setTimeout(() => {
+                ring.style.strokeDashoffset = offset;
+            }, 300);
+        });
+
+        // Simple input focus effect
+        const aiInput = document.querySelector('input');
+        const inputContainer = aiInput?.parentElement;
+        aiInput?.addEventListener('focus', () => {
+            inputContainer.classList.add('border-primary');
+        });
+        aiInput?.addEventListener('blur', () => {
+            inputContainer.classList.remove('border-primary');
+        });
+    </script>
+</body></html>
