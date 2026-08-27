@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,10 +40,12 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Download
@@ -55,6 +58,7 @@ import androidx.compose.material.icons.filled.HomeWork
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Restaurant
@@ -62,6 +66,8 @@ import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.SmartToy
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -679,65 +685,46 @@ private fun GoalsScreen(
         modifier = modifier
             .fillMaxSize()
             .background(NamiBackground)
-            .padding(horizontal = 20.dp),
-        contentPadding = PaddingValues(top = 18.dp, bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+            .padding(horizontal = 22.dp),
+        contentPadding = PaddingValues(top = 30.dp, bottom = 28.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         item {
-            ProfileHeader(
+            ExecutiveProfileHeader(
                 profile = profile,
                 onProfileSave = onProfileSave,
             )
         }
         item {
-            ProfileFinancialPanel(
+            AutomatedRevenuePanel(
                 profile = profile,
                 analytics = analytics,
                 onProfileSave = onProfileSave,
             )
         }
         item {
-            ExportPanel(
+            HouseholdPanel(profile)
+        }
+        item {
+            StrategicGoalsPanel(
+                goals = goals,
+                onAddGoal = onAddGoal,
+                onDeleteGoal = onDeleteGoal,
+            )
+        }
+        item {
+            SystemUtilitiesPanel(
                 transactions = transactions,
                 analytics = analytics,
                 onExport = onExport,
-            )
-        }
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                SectionTitle("Goals")
-                Text("${goals.size} active", color = NamiPrimary, style = MaterialTheme.typography.labelMedium)
-            }
-        }
-        item {
-            AddGoalPanel(onAddGoal)
-        }
-        if (goals.isEmpty()) {
-            item {
-                EmptyPanel("No goals yet", "Create goals to turn spending analysis into a plan.")
-            }
-        } else {
-            items(goals, key = { it.id }) { goal ->
-                GoalCard(goal = goal, onDelete = { onDeleteGoal(goal) })
-            }
-        }
-        item {
-            ProfileSettingsPanel(
                 onOpenNotificationSettings = onOpenNotificationSettings,
             )
-        }
-        item {
-            AccountPanel()
         }
     }
 }
 
 @Composable
-private fun ProfileHeader(
+private fun ExecutiveProfileHeader(
     profile: UserProfile,
     onProfileSave: (UserProfile) -> Unit,
 ) {
@@ -750,37 +737,70 @@ private fun ProfileHeader(
         }
     }
 
-    MilledCard {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                ProfileAvatar(profile = profile)
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(profile.name.ifBlank { "Your profile" }, color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
-                    Text("Goals, salary, export, and app controls", color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                }
-                IconButton(onClick = { photoPicker.launch("image/*") }) {
-                    Icon(Icons.Filled.PhotoCamera, contentDescription = "Change profile photo", tint = NamiPrimary)
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Box(contentAlignment = Alignment.BottomEnd) {
+            ProfileAvatar(profile = profile, size = 132)
+            Surface(
+                shape = CircleShape,
+                color = NamiSurfaceHigh,
+                contentColor = NamiPrimary,
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.12f)),
+            ) {
+                IconButton(onClick = { photoPicker.launch("image/*") }, modifier = Modifier.size(46.dp)) {
+                    Icon(Icons.Filled.Edit, contentDescription = "Change profile photo", modifier = Modifier.size(22.dp))
                 }
             }
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Name") },
-                singleLine = true,
-                colors = profileTextFieldColors(),
+        }
+        Surface(
+            shape = RoundedCornerShape(4.dp),
+            color = Color(0xFFFFD166).copy(alpha = 0.10f),
+            border = BorderStroke(1.dp, Color(0xFFFFD166).copy(alpha = 0.36f)),
+        ) {
+            Text(
+                text = "EXECUTIVE MEMBER",
+                modifier = Modifier.padding(horizontal = 18.dp, vertical = 7.dp),
+                color = Color(0xFFFFD166),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
             )
-            AssistChip(
-                onClick = { onProfileSave(profile.copy(name = name.ifBlank { "Darshan" })) },
-                label = { Text("Save profile") },
-                leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
-            )
+        }
+        Text(
+            text = profile.name.ifBlank { "Your profile" },
+            color = NamiOnSurface,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineMedium,
+        )
+        Text(
+            text = "Joined 2026 · Seamless Sync Active",
+            color = NamiOnSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        MilledCard {
+            Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Display name") },
+                    singleLine = true,
+                    colors = profileTextFieldColors(),
+                )
+                AssistChip(
+                    onClick = { onProfileSave(profile.copy(name = name.ifBlank { "Darshan" })) },
+                    label = { Text("Save profile") },
+                    leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ProfileAvatar(profile: UserProfile) {
+private fun ProfileAvatar(profile: UserProfile, size: Int = 72) {
     val bitmap = remember(profile.profilePhotoPath) {
         profile.profilePhotoPath
             ?.let(::File)
@@ -789,9 +809,16 @@ private fun ProfileAvatar(profile: UserProfile) {
     }
     Box(
         modifier = Modifier
-            .size(72.dp)
+            .size(size.dp)
             .clip(CircleShape)
-            .background(NamiPrimaryContainer.copy(alpha = 0.22f)),
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        NamiPrimaryContainer.copy(alpha = 0.45f),
+                        NamiSurfaceHigh,
+                    ),
+                ),
+            ),
         contentAlignment = Alignment.Center,
     ) {
         if (bitmap != null) {
@@ -806,14 +833,14 @@ private fun ProfileAvatar(profile: UserProfile) {
                 text = profile.name.trim().take(1).ifBlank { "S" }.uppercase(),
                 color = NamiPrimary,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.displaySmall,
             )
         }
     }
 }
 
 @Composable
-private fun ProfileFinancialPanel(
+private fun AutomatedRevenuePanel(
     profile: UserProfile,
     analytics: AnalyticsSummary?,
     onProfileSave: (UserProfile) -> Unit,
@@ -823,65 +850,305 @@ private fun ProfileFinancialPanel(
     }
     val salaryMinor = salaryText.toRupeeMinor()
     val trackedIncome = analytics?.totalIncomeMinor ?: 0L
-    MilledCard {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                CategoryIcon(TransactionCategory.SALARY, size = 40.dp)
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Income profile", color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
-                    Text("Used for daily budget and goal planning", color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+    val investment = analytics?.categorySpends?.firstOrNull { it.category == TransactionCategory.INVESTMENT }?.amountMinor ?: 0L
+
+    ProfileSectionCard(
+        title = "Automated Revenue",
+        icon = Icons.Filled.AccountBalance,
+        trailing = {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = NamiSurfaceHigh,
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.10f)),
+            ) {
+                IconButton(onClick = { onProfileSave(profile.copy(monthlySalaryMinor = salaryMinor)) }) {
+                    Icon(Icons.Filled.Security, contentDescription = "Save salary", tint = NamiPrimary)
                 }
             }
-            TextField(
-                value = salaryText,
-                onValueChange = { salaryText = it.filter { char -> char.isDigit() } },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Monthly salary") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                colors = profileTextFieldColors(),
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                FocusMetric("Saved salary", MoneyFormatter.formatMinor(profile.monthlySalaryMinor, profile.currency), Modifier.weight(1f))
-                FocusMetric("Tracked income", MoneyFormatter.formatMinor(trackedIncome, profile.currency), Modifier.weight(1f))
+        },
+    ) {
+        TextField(
+            value = salaryText,
+            onValueChange = { salaryText = it.filter { char -> char.isDigit() } },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Monthly salary") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            colors = profileTextFieldColors(),
+        )
+        RevenueStreamRow(
+            icon = Icons.Filled.Work,
+            title = "Salary profile",
+            subtitle = "Saved ${MoneyFormatter.formatMinor(profile.monthlySalaryMinor, profile.currency)} · Tracked ${MoneyFormatter.formatMinor(trackedIncome, profile.currency)}",
+            status = "Active Sync",
+            isActive = trackedIncome > 0L || profile.monthlySalaryMinor > 0L,
+        )
+        RevenueStreamRow(
+            icon = Icons.AutoMirrored.Filled.TrendingUp,
+            title = "Investment Portfolio",
+            subtitle = if (investment > 0L) {
+                "${MoneyFormatter.formatMinor(investment, profile.currency)} tracked as investments"
+            } else {
+                "No investment transactions tracked yet"
+            },
+            status = if (investment > 0L) "Active Sync" else "Needs Setup",
+            isActive = investment > 0L,
+        )
+    }
+}
+
+@Composable
+private fun RevenueStreamRow(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    status: String,
+    isActive: Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(NamiSurfaceHigh.copy(alpha = 0.62f))
+            .padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            color = Color.White.copy(alpha = 0.05f),
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f)),
+        ) {
+            Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                Icon(icon, contentDescription = null, tint = NamiOnSurfaceVariant)
             }
-            AssistChip(
-                enabled = salaryMinor >= 0L,
-                onClick = { onProfileSave(profile.copy(monthlySalaryMinor = salaryMinor)) },
-                label = { Text("Save salary") },
-                leadingIcon = { Icon(Icons.Filled.Savings, contentDescription = null) },
+        }
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(if (isActive) Color(0xFF64D6A3) else Color(0xFFFFD166)),
+            )
+            Text(status, color = if (isActive) Color(0xFF64D6A3) else Color(0xFFFFD166), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+@Composable
+private fun HouseholdPanel(profile: UserProfile) {
+    ProfileSectionCard(
+        title = "Household",
+        icon = Icons.Filled.People,
+        trailing = {
+            Surface(shape = CircleShape, color = NamiSurfaceHigh) {
+                IconButton(onClick = {}) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add household member", tint = NamiPrimary)
+                }
+            }
+        },
+    ) {
+        HouseholdMemberRow(
+            title = profile.name.ifBlank { "You" },
+            subtitle = "Owner · Full access",
+            trailingIcon = Icons.Filled.CheckCircle,
+            trailingColor = Color(0xFF64D6A3),
+        )
+        HouseholdMemberRow(
+            title = "Partner",
+            subtitle = "Shared planning · Coming soon",
+            trailingIcon = Icons.Filled.Visibility,
+            trailingColor = NamiOutline,
+        )
+        HouseholdMemberRow(
+            title = "Family",
+            subtitle = "View-only budget circle",
+            trailingIcon = Icons.Filled.Visibility,
+            trailingColor = NamiOutline,
+        )
+    }
+}
+
+@Composable
+private fun HouseholdMemberRow(
+    title: String,
+    subtitle: String,
+    trailingIcon: ImageVector,
+    trailingColor: Color,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = Color.White.copy(alpha = 0.04f),
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f)),
+        ) {
+            Box(modifier = Modifier.size(42.dp), contentAlignment = Alignment.Center) {
+                Icon(Icons.Filled.Person, contentDescription = null, tint = NamiOnSurfaceVariant, modifier = Modifier.size(22.dp))
+            }
+        }
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        }
+        Icon(trailingIcon, contentDescription = null, tint = trailingColor, modifier = Modifier.size(22.dp))
+    }
+}
+
+@Composable
+private fun StrategicGoalsPanel(
+    goals: List<SpendingGoal>,
+    onAddGoal: (SpendingGoal) -> Unit,
+    onDeleteGoal: (SpendingGoal) -> Unit,
+) {
+    ProfileSectionCard(
+        title = "Strategic Goals",
+        icon = Icons.Filled.Flag,
+    ) {
+        AddGoalPanel(onAddGoal)
+        if (goals.isEmpty()) {
+            Text("No goals yet. Add one above to turn spending analysis into a plan.", color = NamiOnSurfaceVariant)
+        } else {
+            goals.forEach { goal ->
+                StrategicGoalRow(goal = goal, onDelete = { onDeleteGoal(goal) })
+            }
+        }
+    }
+}
+
+@Composable
+private fun StrategicGoalRow(goal: SpendingGoal, onDelete: () -> Unit) {
+    val progress = if (goal.targetAmountMinor <= 0L) {
+        0f
+    } else {
+        (goal.currentAmountMinor.toFloat() / goal.targetAmountMinor.toFloat()).coerceIn(0f, 1f)
+    }
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = NamiSurfaceHigh.copy(alpha = 0.50f),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.06f)),
+    ) {
+        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(goal.name.uppercase().take(24), color = NamiOutline, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold)
+                    Text(goal.name, color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("${(progress * 100).toInt()}%", color = NamiPrimary, fontWeight = FontWeight.SemiBold)
+                    IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete goal", tint = Color(0xFFFF6B6B), modifier = Modifier.size(18.dp))
+                    }
+                }
+            }
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier.fillMaxWidth().clip(CircleShape),
+                color = NamiPrimary,
+                trackColor = NamiSurfaceHighest,
+            )
+            Text(
+                text = "${MoneyFormatter.formatMinor(goal.currentAmountMinor, goal.currency)} of ${MoneyFormatter.formatMinor(goal.targetAmountMinor, goal.currency)}",
+                color = NamiOnSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
 }
 
 @Composable
-private fun ExportPanel(
+private fun SystemUtilitiesPanel(
     transactions: List<Transaction>,
     analytics: AnalyticsSummary?,
     onExport: () -> Unit,
+    onOpenNotificationSettings: () -> Unit,
 ) {
-    MilledCard {
+    ProfileSectionCard(
+        title = "System Utilities",
+        icon = Icons.Filled.Security,
+    ) {
+        UtilityRow(
+            icon = Icons.Filled.Notifications,
+            title = "Notification Access",
+            subtitle = "Capture bank and wallet alerts",
+            onClick = onOpenNotificationSettings,
+            enabled = true,
+        )
+        UtilityRow(
+            icon = Icons.Filled.Download,
+            title = "Export Analysis (CSV)",
+            subtitle = "${transactions.size} transactions with advisor notes",
+            onClick = onExport,
+            enabled = analytics != null && transactions.isNotEmpty(),
+        )
+        UtilityRow(
+            icon = Icons.Filled.AccountBalanceWallet,
+            title = "Logout",
+            subtitle = "Available when cloud auth is added",
+            onClick = {},
+            enabled = false,
+        )
+    }
+}
+
+@Composable
+private fun UtilityRow(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        enabled = enabled,
+        shape = RoundedCornerShape(12.dp),
+        color = NamiSurfaceHigh.copy(alpha = if (enabled) 0.52f else 0.30f),
+        contentColor = if (enabled) NamiOnSurface else NamiOutline,
+    ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CategoryIcon(TransactionCategory.TRANSFER, size = 40.dp)
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("Export analysis", color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
-                Text(
-                    "${transactions.size} transactions with category share, weekly movement, and advisor notes.",
-                    color = NamiOnSurfaceVariant,
-                    style = MaterialTheme.typography.bodySmall,
-                )
+            Icon(icon, contentDescription = null, tint = if (enabled) NamiPrimary else NamiOutline)
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(title, color = if (enabled) NamiOnSurface else NamiOutline, fontWeight = FontWeight.Medium)
+                Text(subtitle, color = NamiOnSurfaceVariant, style = MaterialTheme.typography.bodySmall)
             }
-            IconButton(
-                enabled = analytics != null && transactions.isNotEmpty(),
-                onClick = onExport,
-            ) {
-                Icon(Icons.Filled.Download, contentDescription = "Export transactions", tint = if (analytics != null && transactions.isNotEmpty()) NamiPrimary else NamiOutline)
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = if (enabled) NamiPrimary else NamiOutline)
+        }
+    }
+}
+
+@Composable
+private fun ProfileSectionCard(
+    title: String,
+    icon: ImageVector,
+    trailing: (@Composable () -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        color = NamiSurface.copy(alpha = 0.96f),
+        contentColor = NamiOnSurface,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.10f)),
+    ) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null, tint = NamiPrimary, modifier = Modifier.size(26.dp))
+                Text(title, color = NamiOnSurface, fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                trailing?.invoke()
             }
+            content()
         }
     }
 }
@@ -895,59 +1162,57 @@ private fun AddGoalPanel(onAddGoal: (SpendingGoal) -> Unit) {
     val currentMinor = current.toRupeeMinor()
     val canSave = name.isNotBlank() && targetMinor > 0L
 
-    MilledCard {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                CategoryIcon(TransactionCategory.INVESTMENT, size = 38.dp)
-                Text("Add goal", color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
-            }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            CategoryIcon(TransactionCategory.INVESTMENT, size = 38.dp)
+            Text("Add goal", color = NamiOnSurface, fontWeight = FontWeight.SemiBold)
+        }
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Goal name") },
+            singleLine = true,
+            colors = profileTextFieldColors(),
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             TextField(
-                value = name,
-                onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Goal name") },
+                value = target,
+                onValueChange = { target = it.filter { char -> char.isDigit() } },
+                modifier = Modifier.weight(1f),
+                label = { Text("Target") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = profileTextFieldColors(),
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = target,
-                    onValueChange = { target = it.filter { char -> char.isDigit() } },
-                    modifier = Modifier.weight(1f),
-                    label = { Text("Target") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = profileTextFieldColors(),
-                )
-                TextField(
-                    value = current,
-                    onValueChange = { current = it.filter { char -> char.isDigit() } },
-                    modifier = Modifier.weight(1f),
-                    label = { Text("Saved") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = profileTextFieldColors(),
-                )
-            }
-            AssistChip(
-                enabled = canSave,
-                onClick = {
-                    onAddGoal(
-                        SpendingGoal(
-                            name = name.trim(),
-                            targetAmountMinor = targetMinor,
-                            currentAmountMinor = currentMinor.coerceAtMost(targetMinor),
-                            targetDateEpochMillis = null,
-                        ),
-                    )
-                    name = ""
-                    target = ""
-                    current = ""
-                },
-                label = { Text("Add goal") },
-                leadingIcon = { Icon(Icons.Filled.Add, contentDescription = null) },
+            TextField(
+                value = current,
+                onValueChange = { current = it.filter { char -> char.isDigit() } },
+                modifier = Modifier.weight(1f),
+                label = { Text("Saved") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                colors = profileTextFieldColors(),
             )
         }
+        AssistChip(
+            enabled = canSave,
+            onClick = {
+                onAddGoal(
+                    SpendingGoal(
+                        name = name.trim(),
+                        targetAmountMinor = targetMinor,
+                        currentAmountMinor = currentMinor.coerceAtMost(targetMinor),
+                        targetDateEpochMillis = null,
+                    ),
+                )
+                name = ""
+                target = ""
+                current = ""
+            },
+            label = { Text("Add goal") },
+            leadingIcon = { Icon(Icons.Filled.Add, contentDescription = null) },
+        )
     }
 }
 
