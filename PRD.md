@@ -18,17 +18,17 @@ Can I ask follow-up questions?
 
 SpendSense should become the user's everyday money co-pilot:
 
-- It automatically understands spending from transactions.
+- It automatically understands spending from notifications, SMS, and email transaction messages.
 - It explains financial behavior in plain language.
 - It connects daily spending to goals, savings, debt, and future plans.
 - It helps users make better decisions before money leaves the account.
-- It becomes more useful as it learns from corrected merchants, categories, goals, income, and user preferences.
+- It becomes more useful as it learns from corrected merchants, item splits, categories, goals, income, groups, and user preferences.
 
 ## 3. Target Users
 
 ### Primary Users
 
-- Indian digital payment users who receive bank, UPI, card, and wallet notifications.
+- Indian digital payment users who receive bank, UPI, card, wallet, SMS, and email transaction alerts.
 - Users who want automatic tracking but do not want to manually enter every spend.
 - Young professionals who want to control eating out, shopping, subscriptions, rent pressure, and goal progress.
 - Users who want financial clarity but are not ready to hire a financial planner.
@@ -66,6 +66,14 @@ The home screen should not be a collection of disconnected cards. It should tell
 
 The user must be able to correct merchants, categories, goals, salary, household data, and assumptions. Corrections should improve future analysis.
 
+User corrections are not only one-time edits. SpendSense should learn repeat behavior:
+
+- merchant-level category rules
+- item-level splits
+- recurring transaction patterns
+- household/friend group tags
+- split participants and ratios
+
 ### 4.4 Privacy By Design
 
 Raw financial notifications are sensitive. The system should minimize retention, redact where possible, and avoid sending raw notification text to GPT.
@@ -77,7 +85,10 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 ## 5. Product Goals
 
 - Automatically capture and structure financial transactions.
+- Support transaction tracking from notification, SMS, and email sources where user permission and platform policy allow it.
 - Categorize transactions with high accuracy.
+- Learn repeated transaction patterns and split them into subcategories.
+- Detect restaurant, mart, and shared expenses and route them into household or friend groups.
 - Show useful recent-spend insights, not only monthly totals.
 - Help users understand spending impact on goals.
 - Provide AI chat that can answer personal finance questions from user data.
@@ -100,7 +111,7 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 
 1. User installs SpendSense.
 2. User sees a clear privacy and value explanation.
-3. User grants notification access.
+3. User grants notification, SMS, or email permissions based on the capture sources they want to enable.
 4. User optionally enters salary, current savings, and first goal.
 5. App starts capturing transactions.
 6. App shows first insights after enough transactions are available.
@@ -123,7 +134,34 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 5. App remembers the correction.
 6. Future insights improve.
 
-### 7.4 AI Financial Advisor Chat
+### 7.4 Repeated Transaction Learning
+
+1. User pays a merchant where the single payment includes multiple real items.
+2. SpendSense asks what the transaction contained.
+3. User splits the amount into subcategories.
+4. SpendSense stores a learned merchant pattern.
+5. When a similar amount appears again, SpendSense predicts the split.
+6. User confirms or corrects the split.
+7. Repeated confirmations increase confidence and reduce future questions.
+
+Example:
+
+```text
+Transaction: ₹25 paid to cigarette shop
+User correction: ₹22 smoking, ₹3 chocolate/food
+Future ₹50 transaction: app predicts ₹44 smoking, ₹6 chocolate/food
+```
+
+### 7.5 Group And Household Expense Routing
+
+1. User pays at a restaurant, supermarket, delivery app, or mart.
+2. SpendSense asks whether the spend was personal, household, or with friends.
+3. User selects a group and participants.
+4. App records the split and each person's share.
+5. Future similar merchant transactions can be auto-tagged to the same group.
+6. The app shows who owes whom and can export or sync settlement data.
+
+### 7.6 AI Financial Advisor Chat
 
 1. User asks a question such as "Can I buy a phone for ₹50,000?"
 2. Backend classifies intent.
@@ -131,14 +169,14 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 4. GPT explains the result conversationally.
 5. User gets a concise answer with visual cards and next actions.
 
-### 7.5 Goal Planning
+### 7.7 Goal Planning
 
 1. User creates a goal with target amount and current savings.
 2. App tracks spend pressure against the goal.
 3. App suggests savings opportunities.
 4. AI answers what-if questions against the goal.
 
-### 7.6 Export And Review
+### 7.8 Export And Review
 
 1. User opens Profile.
 2. User exports transactions and analysis.
@@ -149,7 +187,9 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 ### 8.1 Transaction Capture
 
 - Notification access onboarding.
-- Bank, UPI, wallet, and card notification parsing.
+- SMS permission onboarding where supported and policy-compliant.
+- Email connection onboarding for transaction emails.
+- Bank, UPI, wallet, card, SMS, and email transaction parsing.
 - Sensitive-message filtering for OTP, CVV, password reset, and authentication messages.
 - Duplicate detection.
 - Refund/reversal detection.
@@ -157,11 +197,22 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Manual transaction entry.
 - Bulk import from CSV.
 
-### 8.2 Transaction Intelligence
+### 8.2 Transaction Source Connectors
+
+- Android notification listener.
+- SMS transaction reader.
+- Email transaction connector.
+- Source-level permission controls.
+- Source health status.
+- Duplicate reconciliation across sources.
+- Message redaction before storage or GPT usage.
+
+### 8.3 Transaction Intelligence
 
 - Merchant extraction.
 - Merchant normalization.
 - Category assignment.
+- Subcategory assignment.
 - Confidence scoring.
 - User correction memory.
 - Unknown merchant review queue.
@@ -169,7 +220,78 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Grouped transactions by day.
 - Search and filters.
 
-### 8.3 Analytics Engine
+### 8.4 Repeated Transaction Learning
+
+SpendSense must support learned transaction patterns for merchants where the same payment often contains multiple item types.
+
+Required behavior:
+
+- Ask the user to explain ambiguous repeated transactions.
+- Allow a transaction to be split into multiple line items.
+- Store line items with category, subcategory, amount, and optional note.
+- Learn merchant templates from confirmed splits.
+- Predict future splits from merchant, amount, time, frequency, and prior confirmations.
+- Show low-confidence predictions for confirmation.
+- Auto-apply high-confidence predictions.
+- Support proportional prediction for repeated quantities.
+
+Example pattern:
+
+```text
+Merchant: Cigarette shop
+Observed amount: ₹25
+Confirmed split:
+  ₹22 smoking
+  ₹3 food/chocolate
+
+Future amount: ₹50
+Predicted split:
+  ₹44 smoking
+  ₹6 food/chocolate
+```
+
+Acceptance requirements:
+
+- The parent transaction amount must always equal the sum of split line items.
+- Split suggestions must never silently overwrite user corrections.
+- The user must be able to edit, reject, or delete a learned pattern.
+- Smoking, alcohol, gambling, and other sensitive categories must be handled without moralizing, but insights can clearly warn about financial and health-adjacent harm.
+
+### 8.5 Group, Household, And Splitwise-Style Expenses
+
+SpendSense should identify transactions that may belong to a household or friend group.
+
+Candidate merchants:
+
+- restaurants
+- cafes
+- bars
+- grocery stores
+- supermarkets
+- marts
+- food delivery
+- travel bookings
+- shared subscriptions
+
+Required behavior:
+
+- Ask whether eligible transactions are personal, household, or group expenses.
+- Let user create household and friend groups.
+- Let user assign participants.
+- Support equal split, custom amount split, percentage split, and paid-by-user tracking.
+- Calculate balances by participant.
+- Show settlement suggestions.
+- Learn merchant-to-group routing after repeated confirmations.
+- Export group expense ledger.
+- Keep personal analytics separate from reimbursable group spend.
+
+Acceptance requirements:
+
+- Personal spend, household spend, and reimbursable friend-group spend must be distinguishable in analytics.
+- Goal impact should use the user's final personal share, not the full transaction amount when split is enabled.
+- The app must make it clear when a spend is waiting for split confirmation.
+
+### 8.6 Analytics Engine
 
 - Today spend.
 - Yesterday spend.
@@ -182,10 +304,13 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Income, expense, and net cash flow.
 - Fixed vs variable spend.
 - Discretionary spend ratio.
+- Personal vs shared spend.
+- Reimbursable spend.
+- Subcategory trend, for example smoking, chocolate, eating out, groceries.
 - Savings opportunity calculation.
 - Budget health score.
 
-### 8.4 Home
+### 8.7 Home
 
 - Narrative diagnosis card.
 - Today's decision card.
@@ -196,7 +321,7 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Empty states that explain what data is needed.
 - No repeated disconnected insight cards.
 
-### 8.5 Insights
+### 8.8 Insights
 
 - Advisor-style actionable insights.
 - Rising category warnings.
@@ -204,11 +329,13 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Tobacco/cigarette warning when detected.
 - Reckless spending warnings.
 - Investment momentum tracking.
+- Subcategory habit warnings.
+- Shared-spend/reimbursement warnings.
 - Savings opportunity ranking.
 - Positive reinforcement when spend improves.
 - Simple visualization per insight.
 
-### 8.6 AI Chat
+### 8.9 AI Chat
 
 - Personal finance chat from structured user data.
 - Precomputed common question suggestions.
@@ -216,12 +343,14 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Short answers by default.
 - Follow-up context.
 - Budget, category, merchant, goal, loan, EMI, rent, and emergency fund questions.
+- Questions about repeated merchants and item splits.
+- Questions about household/friend group balances.
 - Missing-input detection.
 - Safety guardrails.
 - GPT-backed cloud answers for production.
 - Deterministic fallback when GPT is unavailable.
 
-### 8.7 Financial Planning
+### 8.10 Financial Planning
 
 - Purchase affordability.
 - EMI calculator.
@@ -234,23 +363,26 @@ The free version must create trust and daily habit. Pro should unlock deeper adv
 - Subscription review.
 - Tax planning placeholder with explicit missing inputs.
 
-### 8.8 Profile
+### 8.11 Profile
 
 - Profile photo.
 - Display name.
 - Salary.
 - Household members.
+- Friend groups.
 - Goals.
 - Notification access settings.
+- SMS/email connector settings.
 - Export CSV.
 - Logout.
 - Data/privacy settings.
 - Subscription plan management.
 
-### 8.9 Cloud Backend
+### 8.12 Cloud Backend
 
 - User accounts.
 - Secure transaction sync.
+- SMS/email source sync metadata.
 - Backend analytics.
 - GPT insight generation.
 - Insight caching.
@@ -268,12 +400,14 @@ This is a starting point. Final packaging should be decided after usage analytic
 ### Free
 
 - Notification-based transaction capture.
+- Basic SMS/email transaction import where supported.
 - Basic transaction list.
 - Basic category totals.
 - Today and 7-day spend summary.
 - Limited goal tracking, for example 1 goal.
 - Limited AI suggestions, for example 5-10 AI answers/month.
 - Manual category correction.
+- Manual transaction splitting.
 - Basic CSV export.
 
 ### Plus: Suggested ₹99/month
@@ -282,6 +416,8 @@ This is a starting point. Final packaging should be decided after usage analytic
 - Advanced Home narrative.
 - Multiple goals.
 - Full category and merchant trend insights.
+- Repeated merchant learning.
+- Auto-suggested transaction splits.
 - Daily guardrails.
 - More AI chat usage, for example 100 answers/month.
 - Goal impact analysis.
@@ -297,6 +433,8 @@ This is a starting point. Final packaging should be decided after usage analytic
 - Purchase what-if planning.
 - Emergency fund planning.
 - Household/shared planning.
+- Friend group split tracking.
+- Auto group tagging for restaurants and marts.
 - Priority insight refresh.
 - Advanced reports.
 - Tax planning when implemented.
@@ -336,8 +474,14 @@ The backend should store:
 - Users.
 - Devices.
 - Transactions.
+- Transaction line-item splits.
+- Learned merchant split patterns.
 - Merchant corrections.
 - Category rules.
+- Subcategory rules.
+- Groups and participants.
+- Group expense ledgers.
+- Settlement balances.
 - Goals.
 - Profile and salary assumptions.
 - Insights.
@@ -350,6 +494,9 @@ The backend should store:
 The backend should:
 
 - Accept sanitized transactions from app.
+- Reconcile duplicate transactions across notification, SMS, and email.
+- Learn and apply repeated transaction split patterns.
+- Compute personal share vs shared/reimbursable share.
 - Run analytics jobs.
 - Precompute insight summaries.
 - Generate GPT-ready compact context.
@@ -364,6 +511,8 @@ GPT should receive:
 - Structured summaries.
 - Relevant aggregates.
 - Selected recent merchants/categories.
+- Subcategory and split summaries.
+- Group balance summaries.
 - Goal data.
 - Deterministic planning results.
 
@@ -381,6 +530,8 @@ GPT should not receive by default:
 - Notification access completion rate.
 - First transaction captured.
 - First correction completed.
+- First split transaction confirmed.
+- First group expense created.
 - First goal created.
 - First useful insight viewed.
 
@@ -392,12 +543,16 @@ GPT should not receive by default:
 - AI questions asked.
 - Insight card taps.
 - Category corrections.
+- Split confirmations.
+- Group expense tagging.
 
 ### Financial Outcome
 
 - Users who reduce rising discretionary categories.
 - Users who create and progress goals.
 - Users who follow daily guardrail.
+- Users who reduce harmful or low-value subcategory habits.
+- Users who recover/reconcile reimbursable group expenses.
 - Savings opportunity accepted.
 
 ### Monetization
@@ -412,6 +567,8 @@ GPT should not receive by default:
 
 - Parser accuracy.
 - Category accuracy.
+- Subcategory split accuracy.
+- Group routing accuracy.
 - Correction rate.
 - Crash-free sessions.
 - Export/download usage.
@@ -420,7 +577,11 @@ GPT should not receive by default:
 ## 13. Key Risks
 
 - Notification parsing accuracy varies across banks and wallets.
+- SMS access can be restricted by Android and Google Play policy, so notification/email import may need to be the primary production path.
+- Email import requires explicit user consent and provider-specific OAuth/security review.
 - Unknown merchant/category quality can make insights weak.
+- Wrong learned split patterns can damage trust if applied without confirmation.
+- Group expenses can distort personal analytics if reimbursements are not modeled correctly.
 - GPT costs can grow quickly without caching and limits.
 - Users may not trust financial advice unless it cites data clearly.
 - Financial advice safety and compliance must be handled carefully.
@@ -442,17 +603,20 @@ GPT should not receive by default:
 ### Phase 1: Strong Local Product
 
 - Reliable notification capture.
+- SMS/email import feasibility spike.
 - Deterministic parser.
 - Local DB.
 - Home narrative.
 - Insights.
 - AI chat with local/deterministic fallback.
 - Profile, goals, export.
+- Manual transaction split.
 
 ### Phase 2: Cloud MVP
 
 - User auth.
 - Backend transaction sync.
+- Email transaction connector.
 - Managed Postgres.
 - Backend analytics engine.
 - GPT-backed advisor.
@@ -467,7 +631,10 @@ GPT should not receive by default:
 - Emergency fund.
 - Rent burden.
 - Purchase what-if.
+- Repeated transaction learning.
+- Item-level subcategory splits.
 - Household planning.
+- Friend group split ledger.
 - Better merchant learning.
 
 ### Phase 4: Monetization And Scale
@@ -490,8 +657,12 @@ GPT should not receive by default:
 ## 16. Open Decisions
 
 - Should default production architecture remain offline-first with optional cloud sync, or become cloud-first?
+- Can SMS tracking pass target-store policy, or should SMS be limited to local/import/manual flows?
+- Which email providers should be supported first?
 - Should GPT answers be available in Free, or only precomputed insight suggestions?
 - Should Pro include household planning at launch or later?
+- Should repeated transaction learning be Plus or Pro?
+- Should friend-group Splitwise-style tracking be Pro only?
 - Should salary be manually entered, inferred, or both?
 - How much transaction history should be sent to backend by default?
 - What exact AI monthly limits should Plus and Pro include?
@@ -503,6 +674,9 @@ GPT should not receive by default:
 - User can capture transactions from notifications.
 - User can see a coherent Home narrative.
 - User can correct unknown merchants/categories.
+- User can split a transaction into subcategories.
+- App can learn a repeated merchant split after confirmation.
+- User can tag eligible transactions as personal, household, or friend group.
 - User can create and track at least one goal.
 - User can ask common finance questions and get grounded answers.
 - Backend stores transactions and insights securely.
@@ -511,4 +685,3 @@ GPT should not receive by default:
 - Admin can monitor GPT cost per user and per plan.
 - User can export data.
 - User can delete account data.
-
