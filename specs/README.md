@@ -8,6 +8,7 @@ This directory is the source of truth for turning `trd.md` into implementation w
 - `architecture.md` defines the Android-first architecture and module boundaries.
 - `data-model.md` defines core domain entities and persistence rules.
 - `security-privacy.md` defines privacy, retention, logging, and AI safety constraints.
+- `../trd-online.md` defines the online app architecture with auth, encrypted cloud storage, backend analytics, and GPT advisor flows.
 - `000-mvp-vertical-slice/` is the first executable implementation spec.
 
 ## Workflow
